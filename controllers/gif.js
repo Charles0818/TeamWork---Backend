@@ -9,19 +9,37 @@ exports.getAllGifs = (req, res) => {
     .catch((err) => res.status(400).json({ error: err }));
 };
 
+exports.getOneGif = (req, res) => {
+  query('SELECT * FROM gifs WHERE id=$1', [req.params.id])
+    .then((result) => res.status(200).json({
+      status: 'success',
+      data: {
+        id: 'Integer',
+        createdOn: 'DateTime',
+        title: String,
+        article: String,
+        comments: [...result.rows.comments]
+      }
+    }));
+};
+
 exports.postGif = (req, res) => {
   req.body.gif = JSON.parse(req.body.gif);
-  const imageFile = req.files.image.path;
+  const imageFile = req.files.path;
+  console.log(imageFile);
   const { title } = req.body;
   // Upload file to Cloudinary
   cloudinary.upload(imageFile)
     .then((image) => {
-      query(`INSERT INTO gifs(
+      query(`INSERT INTO feeds(
             Title,
-            ImageUrl,
-            ImageID,
+            Content,
             UserID
-        ) VALUES ($1, $2, $3, $4) RETURNING *`, [title, image.url, image.public_id, req.params.id])
+        ) VALUES ($1, $2, $3, 'gif');
+        INSERT INTO cloudinary(
+          PublicID,
+          URL
+        ) VALUES ($2, $4);`, [title, image.public_id, req.params.id, image.url])
         .then((result) => res.status(201).json({
           status: 'success',
           data: {
@@ -37,8 +55,10 @@ exports.postGif = (req, res) => {
 };
 
 exports.deleteGif = (req, res) => {
-  const gifId = req.params.gifId;
-  query('DELETE FROM gifs WHERE ImageID=$3', [gifId])
-    .then(() => res.status(200).json({ message: 'GIF was successfully deleted' }))
+  const gifId = req.params.id;
+  const publicID = req.body.public_id;
+  cloudinary.delete(publicID)
+    .then(() => query('DELETE FROM feeds WHERE ImageID=$3', [gifId])
+      .then(() => res.status(200).json({ message: 'GIF was successfully deleted' })))
     .catch((err) => res.status(400).json({ error: err }));
 };
