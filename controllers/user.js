@@ -6,44 +6,40 @@ const jwt = require('jsonwebtoken');
 const { query } = require('../config/db');
 
 exports.createUser = (req, res) => {
-  bcrypt.hash(req.body.password, 10)
+  const {
+    firstName, lastName, email, gender, jobRole, department, address,
+  } = req.body;
+  let password = req.body;
+  bcrypt.hash(password, 10)
     .then((hash) => {
-      const {
-        firstName, lastName, email, gender, jobRole, department, address,
-      } = req.body;
-      const password = hash;
-      const props = `INSERT INTO users(
-            firstName, 
-            lastName, 
-            email, 
-            password, 
-            gender, 
-            jobRole, 
-            department, 
-            address
-        ) 
-        VALUES($1, $2, $3, $4, $5)
-        RETURNING *`;
-      const values = [firstName, lastName, email, password, gender, jobRole, department, address];
+      const values = [
+        firstName, lastName, email, password = hash, gender, jobRole, department, address,
+      ];
 
-      query(props, values, (error, result) => {
-        // done();
-        if (error) {
-          res.status(500).json({
-            status: 'error',
-            error: 'User account creation failed',
-          });
-        }
-        res.status(201).json({
+      query(`INSERT INTO users(
+        firstName, 
+        lastName, 
+        email, 
+        password, 
+        gender, 
+        jobRole, 
+        department, 
+        address
+    ) 
+    VALUES($1, $2, $3, $4, $5, $6, $7, $8)
+    RETURNING *`, [...values])
+        .then(() => res.status(201).json({
           status: 'success',
           data: {
             message: 'User account successfully created',
             token: req.headers.authorization.split(' ')[1],
             userId: result.rows[0].id, // cross check
           },
-        });
-      });
-    });
+        }));
+    }).catch((err) => res.status(400).json({
+      status: 'error',
+      error: `User account creation failed, ${err} `,
+    }));
 };
 
 exports.login = (req, res) => {
