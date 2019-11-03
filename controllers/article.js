@@ -48,25 +48,19 @@ exports.modifyArticle = (req, res) => {
 exports.getOneArticle = (req, res) => {
   const { id } = req.params;
   query(
-    `SELECT feeds.id,
-      title,
-      content
-    FROM
-      feeds
-    INNER JOIN comments ON comments.ContentID = feeds.id
-    WHERE feeds.id=$1;
-    `, [id]
+    `SELECT DISTINCT id, title, content, type, createdOn
+    FROM feeds WHERE (id=$1 AND type='text');`, [id]
   )
-    .then((result) => res.status(200).json({
-      result
-      // status: 'success',
-      // data: {
-      //   id: result.rows[0].id,
-      //   createdOn: result.rows[0].createdOn,
-      //   article: result.rows[0].content,
-      //   title: result.rows[0].title,
-      //   comments: [result.rows[0].comment]
-      // }
-    }))
+    .then((content) => {
+      query(`SELECT id, comment, contentID, userID, createdOn
+       FROM comments WHERE contentID = $1`, [content.rows[0].id])
+        .then((comments) => res.status(200).json({
+          status: 'success',
+          data: {
+            content: content.rows[0],
+            comments: comments.rows
+          }
+        }));
+    })
     .catch((error) => res.status(404).json({ error: `Unable to view article with id: ${id}, ${error}` }));
 };

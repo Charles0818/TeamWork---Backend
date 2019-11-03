@@ -3,10 +3,11 @@
 const { query } = require('../config/db');
 const cloudinary = require('../config/cloudinary');
 
+
 exports.getOneGif = (req, res) => {
   const { id } = req.params;
   query(
-    `SELECT DISTINCT id, title, content[0], content[1], type, createdOn
+    `SELECT DISTINCT id, title, content, type, createdOn
     FROM feeds WHERE (id=$1 AND type='gif');`, [id]
   )
     .then((content) => {
@@ -24,7 +25,6 @@ exports.getOneGif = (req, res) => {
 };
 
 exports.postGif = (req, res) => {
-  // req.body.file = JSON.parse(req.body.file);
   const file = req.files[0].path;
   const { title, userID } = req.body;
   // Upload file to Cloudinary

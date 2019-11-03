@@ -38,7 +38,7 @@ exports.modifyComment = (req, res) => {
       data: {
         message: ' Comment successfully updated ',
         comment: result.rows[0].comment,
-        commentID: result.rows[0].id,
+        commentId: result.rows[0].id,
       }
     }))
     .catch((error) => res.status(404).json({ error }));
