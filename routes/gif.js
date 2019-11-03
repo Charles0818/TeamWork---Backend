@@ -1,11 +1,10 @@
 const express = require('express');
-const multipart = require('connect-multiparty');
+// const multipart = require('mul');
 const gifCtrl = require('../controllers/gif');
-// const auth = require('../middlewares/auth');
+const multerConfig = require('../middlewares/multer');
 
 const router = express.Router();
-const multipartyMiddleWare = multipart();
-router.get('/', gifCtrl.getAllGifs);
-router.post('/', multipartyMiddleWare, gifCtrl.postGif);
+router.get('/:id', gifCtrl.getOneGif);
+router.post('/', multerConfig.any(), gifCtrl.postGif);
 router.delete('/:id', gifCtrl.deleteGif);
 module.exports = router;

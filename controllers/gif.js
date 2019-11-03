@@ -3,51 +3,49 @@
 const { query } = require('../config/db');
 const cloudinary = require('../config/cloudinary');
 
-exports.getAllGifs = (req, res) => {
-  query('SELECT * FROM gifs')
-    .then((result) => res.status(200).json(result))
-    .catch((err) => res.status(400).json({ error: err }));
-};
-
 exports.getOneGif = (req, res) => {
-  query('SELECT * FROM gifs WHERE id=$1', [req.params.id])
-    .then((result) => res.status(200).json({
-      status: 'success',
-      data: {
-        id: 'Integer',
-        createdOn: 'DateTime',
-        title: String,
-        article: String,
-        comments: [...result.rows.comments]
-      }
-    }));
+  const { id } = req.params;
+  query(
+    `SELECT DISTINCT id, title, content[0], content[1], type, createdOn
+    FROM feeds WHERE (id=$1 AND type='gif');`, [id]
+  )
+    .then((content) => {
+      query(`SELECT id, comment, contentID, userID, createdOn from comments
+    WHERE contentID = $1`, [content.rows[0].id])
+        .then((comments) => res.status(200).json({
+          status: 'success',
+          data: {
+            content: content.rows[0],
+            comments: comments.rows
+          }
+        }));
+    })
+    .catch((error) => res.status(404).json({ error: `Unable to view gif with id: ${id}, ${error}` }));
 };
 
 exports.postGif = (req, res) => {
-  req.body.gif = JSON.parse(req.body.gif);
-  const imageFile = req.files.path;
-  console.log(imageFile);
-  const { title } = req.body;
+  // req.body.file = JSON.parse(req.body.file);
+  const file = req.files[0].path;
+  const { title, userID } = req.body;
   // Upload file to Cloudinary
-  cloudinary.upload(imageFile)
+  cloudinary.upload(file)
     .then((image) => {
-      query(`INSERT INTO feeds(
-            Title,
-            Content,
-            UserID
-        ) VALUES ($1, $2, $3, 'gif');
-        INSERT INTO cloudinary(
-          PublicID,
-          URL
-        ) VALUES ($2, $4);`, [title, image.public_id, req.params.id, image.url])
+      const imageDetails = [
+        image.url,
+        image.public_id
+      ];
+      query(`INSERT INTO feeds (
+            Title, Content, UserID, Type
+        ) VALUES ($1, $2, $3, 'gif') RETURNING *;`, [title, imageDetails, userID])
         .then((result) => res.status(201).json({
           status: 'success',
           data: {
-            gifId: result.rows[0].ImageID,
+            gifId: result.rows[0].id,
+            cloudId: result.rows[0].content[1],
             message: 'GIF image successfully posted',
-            createdOn: result.rows[0].CreatedOn,
-            title: result.rows[0].Title,
-            imageUrl: result.rows[0].ImageUrl
+            createdOn: result.rows[0].createdon,
+            title: result.rows[0].title,
+            imageUrl: result.rows[0].content[0]
           }
         }))
         .catch((err) => res.status(400).json({ error: `unable to connect to database, ${err}` }));
@@ -56,9 +54,9 @@ exports.postGif = (req, res) => {
 
 exports.deleteGif = (req, res) => {
   const gifId = req.params.id;
-  const publicID = req.body.public_id;
+  const publicID = req.body.cloudId;
   cloudinary.delete(publicID)
-    .then(() => query('DELETE FROM feeds WHERE ImageID=$3', [gifId])
+    .then(() => query("DELETE FROM feeds WHERE (id=$1 AND type='gif')", [gifId])
       .then(() => res.status(200).json({ message: 'GIF was successfully deleted' })))
     .catch((err) => res.status(400).json({ error: err }));
 };
