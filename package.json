@@ -1,0 +1,37 @@
+{
+  "name": "teamwork---backend",
+  "version": "1.0.0",
+  "description": "TeamWork is an internal social network for employees of an organization / company. It serves as a network communicating tool majorly for team collaboration.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Charles0818/TeamWork---Backend.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Charles0818/TeamWork---Backend/issues"
+  },
+  "homepage": "https://github.com/Charles0818/TeamWork---Backend#readme",
+  "dependencies": {
+    "bcrypt": "^3.0.6",
+    "cloudinary": "^1.16.0",
+    "connect-multiparty": "^2.2.0",
+    "cors": "^2.8.5",
+    "datauri": "^2.0.0",
+    "dotenv": "^8.2.0",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-plugin-import": "^2.18.2",
+    "express": "^4.17.1",
+    "express-promise-router": "^3.0.3",
+    "jsonwebtoken": "^8.5.1",
+    "multer": "^1.4.2",
+    "pg": "^7.12.1"
+  },
+  "devDependencies": {
+    "eslint": "^6.6.0"
+  }
+}
