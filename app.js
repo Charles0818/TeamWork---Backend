@@ -18,5 +18,4 @@ app.use('/api/v1/articles', articleRouter);
 app.use('/api/v1/feed', feedRoutes);
 app.use('/api/v1/articles', commentRoutes);
 app.use('/api/v1/gifs', commentRoutes);
-// app.use('/api/v1/gifs/:gifId', commentRoutes);
 module.exports = app;

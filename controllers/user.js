@@ -1,44 +1,49 @@
 /* eslint-disable consistent-return */
-/* eslint-disable no-undef */
-/* eslint-disable no-unused-expressions */
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { query } = require('../config/db');
-require('dotenv');
+require('dotenv').config();
 
 exports.createUser = (req, res) => {
   const {
-    firstName, lastName, email, gender, jobRole, department, address,
+    firstName, lastName, email, gender, jobRole, department, address, accountType,
   } = req.body;
-
   let { password } = req.body;
-  // console.log(password);
-  bcrypt.hash(password, 10)
-    .then((hash) => {
-      password = hash;
-      query(`INSERT INTO users (
-        firstName, lastName, email, password, gender, jobRole, department, address
-        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *`, [
-        firstName, lastName, email, password, gender, jobRole, department, address])
-        .then((result) => res.status(201).json({
-          status: 'success',
-          data: {
-            message: 'User account successfully created',
-            token: req.headers.authorization.split(' ')[1],
-            userId: result.rows[0].id, // cross check
-          },
-        }))
-        .catch((err) => res.status(400).json({ error: `User account not created, ${err}` }));
-    }).catch((err) => res.status(400).json({
+  query('SELECT TRUE FROM users WHERE email=$1', [email])
+    .then((boolValue) => {
+      if (boolValue.rows[0].bool === true) {
+        return res.status(400).json({ error: 'An exact email already exist in the database' });
+      }
+      bcrypt.hash(password, 10)
+        .then((hash) => {
+          password = hash;
+          query(`INSERT INTO users (
+          firstName, lastName, email, password, gender, jobRole, department, address, account_type
+          ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *`, [
+            firstName, lastName, email, password,
+            gender, jobRole, department, address, accountType])
+            .then((result) => res.status(201).json({
+              status: 'success',
+              data: {
+                message: 'User account successfully created',
+                token: req.headers.authorization.split(' ')[1],
+                userId: result.rows[0].id, // cross check
+              },
+            }))
+            .catch((err) => res.status(400).json({ error: `User account not created, ${err}` }));
+        });
+    })
+    .catch((err) => res.status(400).json({
       status: 'error',
       error: `User account creation failed, ${err} `,
     }));
 };
 
 exports.login = (req, res) => {
-  query('SELECT DISTINCT * FROM users WHERE email=$1', [req.body.email])
+  query(`SELECT DISTINCT email, password FROM users WHERE EXISTS
+  (SELECT TRUE FROM users WHERE email=$1)`, [req.body.email])
     .then((user) => {
-      if (!user) {
+      if (user.rows.length === 0) {
         return res.status(401).json({ error: 'User not found' });
       }
       bcrypt.compare(req.body.password, user.rows[0].password)
@@ -49,6 +54,7 @@ exports.login = (req, res) => {
             status: 'success',
             data: {
               userId: user.rows[0].id,
+              accountType: user.rows[0].account_type,
               token,
             },
           });
