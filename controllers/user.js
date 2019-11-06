@@ -12,32 +12,30 @@ exports.createUser = (req, res) => {
   let { password } = req.body;
   query('SELECT TRUE FROM users WHERE email=$1', [email])
     .then((boolValue) => {
-      if (boolValue.rows[0].bool === true) {
-        return res.status(400).json({ error: 'An exact email already exist in the database' });
-      }
-      if (boolValue.rows.length === 0 && boolValue.rows[0].bool === false) {
-        bcrypt.hash(password, 10)
-          .then((hash) => {
-            password = hash;
-            query(`INSERT INTO users (
+      // if (boolValue.rows[0].bool === true) {
+      //   return res.status(400).json({ error: 'An exact email already exist in the database' });
+      // }
+      bcrypt.hash(password, 10)
+        .then((hash) => {
+          password = hash;
+          query(`INSERT INTO users (
           firstName, lastName, email, password, gender, jobRole, department, address, account_type
           ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *`, [
-              firstName, lastName, email, password,
-              gender, jobRole, department, address, accountType])
-              .then((result) => res.status(201).json({
-                status: 'success',
-                data: {
-                  message: 'User account successfully created',
-                  token: req.headers.authorization.split(' ')[1],
-                  userId: result.rows[0].id, // cross check
-                },
-              }))
-              .catch((err) => res.status(400).json({
-                status: 'failure',
-                error: `User account not created, ${err}`,
-              }));
-          });
-      }
+            firstName, lastName, email, password,
+            gender, jobRole, department, address, accountType])
+            .then((result) => res.status(201).json({
+              status: 'success',
+              data: {
+                message: 'User account successfully created',
+                token: req.headers.authorization.split(' ')[1],
+                userId: result.rows[0].id, // cross check
+              },
+            }))
+            .catch((err) => res.status(400).json({
+              status: 'failure',
+              error: `User account not created, ${err}`,
+            }));
+        });
     })
     .catch((err) => res.status(400).json({
       status: 'failure',
