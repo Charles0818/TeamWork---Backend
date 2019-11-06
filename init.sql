@@ -13,6 +13,7 @@ CREATE TABLE IF NOT EXISTS
         jobRole VARCHAR(128) NOT NULL,
         department VARCHAR(128) NOT NULL,
         address VARCHAR(128) NOT NULL,
+        PhotoDetails VARCHAR(255) [] NOT NULL,
         Account_type account_type
 );
 
@@ -21,7 +22,7 @@ CREATE TABLE IF NOT EXISTS
     feeds (
         id BIGSERIAL NOT NULL PRIMARY KEY,
         Title VARCHAR(128) NOT NULL,
-        Content VARCHAR(255) [] NOT NULL,
+        Content TEXT [] NOT NULL,
         UserID int NOT NULL,
         Type ContentType,
         IsFlagged BOOL,

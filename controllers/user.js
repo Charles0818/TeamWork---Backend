@@ -2,6 +2,7 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { query } = require('../config/db');
+const cloudinary = require('../config/cloudinary');
 require('dotenv').config();
 
 exports.createUser = (req, res) => {
@@ -43,7 +44,7 @@ exports.createUser = (req, res) => {
 };
 
 exports.login = (req, res) => {
-  query(`SELECT DISTINCT email, password FROM users WHERE EXISTS
+  query(`SELECT DISTINCT email, password, id FROM users WHERE EXISTS
   (SELECT TRUE FROM users WHERE email=$1)`, [req.body.email])
     .then((user) => {
       if (user.rows.length === 0) {
@@ -57,7 +58,6 @@ exports.login = (req, res) => {
             status: 'success',
             data: {
               userId: user.rows[0].id,
-              accountType: user.rows[0].account_type,
               token,
             },
           });
@@ -68,6 +68,39 @@ exports.login = (req, res) => {
       status: 'failure',
       error,
     }));
+};
+
+exports.updateUserPic = (req, res) => {
+  const file = req.files[0].path;
+  const { userId } = req.params.userId;
+  if (file) {
+    // Upload file to Cloudinary
+    let imageDetails = [];
+    cloudinary.upload(file)
+      .then((image) => {
+        imageDetails = [
+          image.url,
+          image.public_id,
+        ];
+        query('UPDATE users SET PhotoDetails=$1 WHERE id=$2 RETURNING *;', [imageDetails, userId])
+          .then((result) => res.status(201).json({
+            status: 'success',
+            data: {
+              userId: result.rows[0].id,
+              cloudId: result.rows[0].content[1],
+              message: 'Profile Picture was successfully updated',
+              photoUrl: result.rows[0].content[0],
+            },
+          }))
+          .catch((err) => res.status(400).json({
+            status: 'failure',
+            error: `unable to connect to database, ${err}`,
+          }));
+      }).catch((err) => res.status(400).json({
+        status: 'failure',
+        error: `Unable to connect to cloud storage, ${err}`,
+      }));
+  }
 };
 
 exports.deleteUser = (req, res) => {
