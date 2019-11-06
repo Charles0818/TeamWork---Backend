@@ -4,7 +4,8 @@
   "description": "TeamWork is an internal social network for employees of an organization / company. It serves as a network communicating tool majorly for team collaboration.",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "heroku-postbuild": "npm install --production"
   },
   "repository": {
     "type": "git",

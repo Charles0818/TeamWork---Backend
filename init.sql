@@ -1,3 +1,7 @@
+CREATE TYPE ContentType AS ENUM('gif', 'article');
+
+CREATE TYPE account_type AS ENUM('admin', 'regular');
+
 CREATE TABLE IF NOT EXISTS 
     users (
         id BIGSERIAL NOT NULL PRIMARY KEY,
@@ -19,7 +23,8 @@ CREATE TABLE IF NOT EXISTS
         Title VARCHAR(128) NOT NULL,
         Content VARCHAR(255) [] NOT NULL,
         UserID int NOT NULL,
-        Type ContentType, 
+        Type ContentType,
+        IsFlagged BOOL,
         CreatedOn TIMESTAMP NOT NULL DEFAULT NOW()
 );
 
@@ -29,6 +34,7 @@ CREATE TABLE IF NOT EXISTS
         Comment TEXT NOT NULL,
         UserID int NOT NULL,
         ContentID int NOT NULL,
+        IsFlagged BOOL,
         CreatedOn TIMESTAMP NOT NULL DEFAULT NOW(),
         FOREIGN KEY (ContentID) REFERENCES feeds(id) ON DELETE CASCADE
 );

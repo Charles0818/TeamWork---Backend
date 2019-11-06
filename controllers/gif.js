@@ -21,7 +21,10 @@ exports.getOneGif = (req, res) => {
           }
         }));
     })
-    .catch((error) => res.status(404).json({ error: `Unable to view gif with id: ${id}, ${error}` }));
+    .catch((error) => res.status(404).json({
+      status: 'failure',
+      error: `Unable to view gif with id: ${id}, ${error}`
+    }));
 };
 
 exports.postGif = (req, res) => {
@@ -48,8 +51,14 @@ exports.postGif = (req, res) => {
             imageUrl: result.rows[0].content[0]
           }
         }))
-        .catch((err) => res.status(400).json({ error: `unable to connect to database, ${err}` }));
-    }).catch((err) => res.status(400).json({ error: `Unable to connect to cloud storage, ${err}` }));
+        .catch((err) => res.status(400).json({
+          status: 'failure',
+          error: `unable to connect to database, ${err}`
+        }));
+    }).catch((err) => res.status(400).json({
+      status: 'failure',
+      error: `Unable to connect to cloud storage, ${err}`
+    }));
 };
 
 exports.deleteGif = (req, res) => {

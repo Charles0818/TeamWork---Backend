@@ -8,25 +8,36 @@ exports.postArticle = (req, res) => {
         Title,
         Content,
         UserID,
-        Type
-    ) VALUES ($1, $2, $3, 'text') RETURNING *`, [title, article, userID])
+        Type,
+        IsFlagged
+    ) VALUES ($1, $2, $3, 'article', false) RETURNING *`, [title, article, userID])
     .then((result) => res.status(201).json({
       status: 'success',
       data: {
         message: 'Article successfully posted',
         articleID: result.rows[0].id,
         title: result.rows[0].title,
-        createdOn: result.rows[0].createdOn
+        createdOn: result.rows[0].createdOn,
+        isFlagged: result.rows[0].isflagged
       }
     }))
-    .catch((err) => res.status(400).json({ error: err }));
+    .catch((err) => res.status(400).json({
+      status: 'failure',
+      error: err
+    }));
 };
 
 exports.deleteArticle = (req, res) => {
   const { id } = req.params;
   query('DELETE FROM feeds WHERE id=$1', [id])
-    .then(() => res.status(200).json({ message: 'Article successfully deleted' }))
-    .catch((err) => res.status(400).json({ error: `Could not delete article, ${err}` }));
+    .then(() => res.status(200).json({
+      status: 'success',
+      message: 'Article successfully deleted'
+    }))
+    .catch((err) => res.status(400).json({
+      status: 'failure',
+      error: `Could not delete article, ${err}`
+    }));
 };
 
 exports.modifyArticle = (req, res) => {
@@ -42,14 +53,17 @@ exports.modifyArticle = (req, res) => {
         article: result.rows[0].content
       }
     }))
-    .catch((error) => res.status(404).json({ error }));
+    .catch((err) => res.status(404).json({
+      status: 'failure',
+      error: `Unable to modify article, ${err}`
+    }));
 };
 
 exports.getOneArticle = (req, res) => {
   const { id } = req.params;
   query(
     `SELECT DISTINCT id, title, content, type, createdOn
-    FROM feeds WHERE (id=$1 AND type='text');`, [id]
+    FROM feeds WHERE (id=$1 AND type='article');`, [id]
   )
     .then((content) => {
       query(`SELECT id, comment, contentID, userID, createdOn
@@ -62,5 +76,8 @@ exports.getOneArticle = (req, res) => {
           }
         }));
     })
-    .catch((error) => res.status(404).json({ error: `Unable to view article with id: ${id}, ${error}` }));
+    .catch((error) => res.status(404).json({
+      status: 'failure',
+      error: `Unable to view article with id: ${id}, ${error}`
+    }));
 };

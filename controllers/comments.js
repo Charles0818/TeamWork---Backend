@@ -7,8 +7,9 @@ exports.postComment = (req, res) => {
   query(`INSERT INTO comments(
             comment,
             UserID,
-            contentID
-        ) VALUES ($1, $2, $3) RETURNING *`, [comment, userID, contentID])
+            contentID,
+            IsFlagged
+        ) VALUES ($1, $2, $3, false) RETURNING *`, [comment, userID, contentID])
     .then((result) => res.status(201).json({
       status: 'success',
       data: {
@@ -19,14 +20,23 @@ exports.postComment = (req, res) => {
         createdOn: result.rows[0].createdOn
       }
     }))
-    .catch((err) => res.status(400).json({ error: err }));
+    .catch((err) => res.status(400).json({
+      status: 'failure',
+      error: err
+    }));
 };
 
 exports.deleteComment = (req, res) => {
   const { commentId } = req.params;
   query('DELETE FROM comments WHERE id=$1', [commentId])
-    .then(() => res.status(200).json({ message: 'Comment successfully deleted' }))
-    .catch((err) => res.status(400).json({ error: `Could not delete Comment, ${err}` }));
+    .then(() => res.status(200).json({
+      status: 'success',
+      message: 'Comment successfully deleted'
+    }))
+    .catch((err) => res.status(400).json({
+      status: 'failure',
+      error: `Could not delete Comment, ${err}`
+    }));
 };
 
 exports.modifyComment = (req, res) => {
@@ -36,10 +46,28 @@ exports.modifyComment = (req, res) => {
     .then((result) => res.status(201).json({
       status: 'success',
       data: {
-        message: ' Comment successfully updated ',
+        message: 'Comment successfully updated',
         comment: result.rows[0].comment,
         commentId: result.rows[0].id,
       }
     }))
-    .catch((error) => res.status(404).json({ error }));
+    .catch((error) => res.status(404).json({
+      status: 'failure',
+      error
+    }));
+};
+
+exports.flagComment = (req, res) => {
+  const { commentId } = req.params;
+  const { isFlagged } = req.body;
+  query('UPDATE comments SET isFlagged = $1 WHERE id = $2 RETURNING IsFlagged', [isFlagged, commentId])
+    .then((result) => res.status(201).json({
+      status: 'success',
+      message: 'Comment successfully updated',
+      data: result
+    }))
+    .catch((error) => res.status(404).json({
+      status: 'failure',
+      error
+    }));
 };

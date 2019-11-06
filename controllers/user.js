@@ -30,11 +30,14 @@ exports.createUser = (req, res) => {
                 userId: result.rows[0].id, // cross check
               },
             }))
-            .catch((err) => res.status(400).json({ error: `User account not created, ${err}` }));
+            .catch((err) => res.status(400).json({
+              status: 'failure',
+              error: `User account not created, ${err}`,
+            }));
         });
     })
     .catch((err) => res.status(400).json({
-      status: 'error',
+      status: 'failure',
       error: `User account creation failed, ${err} `,
     }));
 };
@@ -61,12 +64,18 @@ exports.login = (req, res) => {
         }).catch((error) => {
           res.status(500).json({ error });
         });
-    }).catch((error) => res.status(500).json({ error }));
+    }).catch((error) => res.status(500).json({
+      status: 'failure',
+      error,
+    }));
 };
 
 exports.deleteUser = (req, res) => {
   const id = parseInt(req.params.id, 10);
   query('DELETE FROM users WHERE id=$1', [id])
     .then(() => res.status(200).json(`User with ID: ${id} was successfully deleted`))
-    .catch((err) => res.status(400).json({ error: err }));
+    .catch((err) => res.status(400).json({
+      status: 'failure',
+      error: err,
+    }));
 };
