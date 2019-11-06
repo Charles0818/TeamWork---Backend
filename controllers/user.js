@@ -12,9 +12,9 @@ exports.createUser = (req, res) => {
   let { password } = req.body;
   query('SELECT TRUE FROM users WHERE email=$1', [email])
     .then((boolValue) => {
-      // if (boolValue.rows[0].bool === true) {
-      //   return res.status(400).json({ error: 'An exact email already exist in the database' });
-      // }
+      if (boolValue.rows[0].bool === true) {
+        return res.status(400).json({ error: 'An exact email already exist in the database' });
+      }
       bcrypt.hash(password, 10)
         .then((hash) => {
           password = hash;

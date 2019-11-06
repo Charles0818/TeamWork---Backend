@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS
         jobRole VARCHAR(128) NOT NULL,
         department VARCHAR(128) NOT NULL,
         address VARCHAR(128) NOT NULL,
-        PhotoDetails VARCHAR(255) [] NOT NULL,
+        PhotoDetails VARCHAR(255) [],
         Account_type account_type
 );
 
