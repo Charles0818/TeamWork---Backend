@@ -14,8 +14,8 @@ exports.postComment = (req, res) => {
       status: 'success',
       data: {
         message: 'Comment successfully posted',
-        contentID: result.rows[0].contentid,
-        commentID: result.rows[0].id,
+        contentId: result.rows[0].contentid,
+        commentId: result.rows[0].id,
         comments: result.rows[0].comment,
         createdOn: result.rows[0].createdOn
       }

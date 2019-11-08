@@ -2,7 +2,7 @@
 const { query } = require('../config/db');
 
 exports.postArticle = (req, res) => {
-  const { title, article, userID } = req.body;
+  const { title, article, userId } = req.body;
   query(`
     INSERT INTO feeds(
         Title,
@@ -10,12 +10,12 @@ exports.postArticle = (req, res) => {
         UserID,
         Type,
         IsFlagged
-    ) VALUES ($1, $2, $3, 'article', false) RETURNING *`, [title, article, userID])
+    ) VALUES ($1, $2, $3, 'article', false) RETURNING *`, [title, article, userId])
     .then((result) => res.status(201).json({
       status: 'success',
       data: {
         message: 'Article successfully posted',
-        articleID: result.rows[0].id,
+        articleId: result.rows[0].id,
         title: result.rows[0].title,
         createdOn: result.rows[0].createdOn,
         isFlagged: result.rows[0].isflagged
@@ -29,7 +29,8 @@ exports.postArticle = (req, res) => {
 
 exports.deleteArticle = (req, res) => {
   const { id } = req.params;
-  query('DELETE FROM feeds WHERE id=$1', [id])
+  const { userId } = req.body;
+  query('DELETE FROM feeds WHERE (id=$1 AND userId=$2)', [id, userId])
     .then(() => res.status(200).json({
       status: 'success',
       message: 'Article successfully deleted'
@@ -42,9 +43,9 @@ exports.deleteArticle = (req, res) => {
 
 exports.modifyArticle = (req, res) => {
   const { id } = req.params;
-  const { title, article } = req.body;
-  query(`UPDATE feeds SET title = $1, Content = $2 WHERE id = $3
-  RETURNING *`, [title, article, id]) // Not correct
+  const { title, article, userId } = req.body;
+  query(`UPDATE feeds SET title = $1, Content = $2 WHERE (id=$3 AND userId=$4)
+  RETURNING *`, [title, article, id, userId]) // Not correct
     .then((result) => res.status(201).json({
       status: 'success',
       data: {

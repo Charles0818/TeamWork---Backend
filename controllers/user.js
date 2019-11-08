@@ -24,7 +24,7 @@ exports.createUser = (req, res) => {
             firstName, lastName, email, password,
             gender, jobRole, department, address, accountType])
             .then((result) => res.status(201).json({
-              status: 'success',
+              status: 'Success',
               data: {
                 message: 'User account successfully created',
                 token: req.headers.authorization.split(' ')[1],
