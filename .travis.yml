@@ -1,7 +1,14 @@
 language: node_js
 node_js:
-  - 7
-# safelist
+  - "stable"
+cache:
+  directories:
+    - "node_modules"
+script:
+  - npm test
+after_success:
+  - npm run coverage
+  # safelist
 branches:
   only:
   - develop
