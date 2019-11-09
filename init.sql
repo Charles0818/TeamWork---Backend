@@ -25,6 +25,7 @@ CREATE TABLE IF NOT EXISTS
         Content TEXT [] NOT NULL,
         UserID int NOT NULL,
         Type ContentType,
+        Category TEXT [],
         IsFlagged BOOL,
         CreatedOn TIMESTAMP NOT NULL DEFAULT NOW()
 );
