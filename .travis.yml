@@ -5,7 +5,10 @@ node_js:
 branches:
   only:
   - develop
-
+env:
+  global:
+  - NODE_ENV=test
+  
 cache:
   directories:
     - "node_modules"
