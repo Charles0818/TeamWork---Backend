@@ -15,12 +15,12 @@ services:
   - postgresql
 
 env:
+  global:
+  - NODE_ENV=test
   - DB_USER = charles
   - DB_PASSWORD = null
   - DB_PORT = 5432
   - DB_DATABASE = teamwork_test
-  global:
-  - NODE_ENV=test
 
 before_script:
   - psql -c 'create database teamwork_test;' -U postgres
