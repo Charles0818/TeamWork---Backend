@@ -20,7 +20,7 @@ services:
 
 before_script:
   - psql -c 'CREATE DATABASE teamwork;' -U postgres
-  - psql -U postgres -d teamwork_test -a -f init.sql
+  - psql -U postgres -d teamwork -a -f init.sql
 script:
   - npm test
 after_success:
