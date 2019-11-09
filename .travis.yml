@@ -9,22 +9,15 @@ branches:
 cache:
   directories:
     - "node_modules"
+    - "test"
 install:
   - npm install
 services:
   - postgresql
 
-env:
-  global:
-  - NODE_ENV=test
-  - DB_USER = charles
-  - DB_PASSWORD = null
-  - DB_PORT = 5432
-  - DB_DATABASE = teamwork_test
-
 before_script:
-  - psql -c 'create database teamwork_test;' -U postgres
-  - psql -c "CREATE USER charles WITH PASSWORD null;" -U postgres
+  - psql -c 'CREATE DATABASE teamwork_test;' -U postgres
+  - psql -U postgres -d teamwork_test -a -f init.sql
 script:
   - npm test
 after_success:
