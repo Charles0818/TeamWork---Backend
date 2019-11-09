@@ -1,6 +1,11 @@
 language: node_js
 node_js:
   - "stable"
+    # safelist
+branches:
+  only:
+  - develop
+
 cache:
   directories:
     - "node_modules"
@@ -10,18 +15,17 @@ services:
   - postgresql
 
 env:
+  - DB_USER = charles
+  - DB_PASSWORD = null
+  - DB_PORT = 5432
+  - DB_DATABASE = teamwork_test
   global:
   - NODE_ENV=test
 
 before_script:
-  - psql -c 'create database teamwork;' -U postgres
+  - psql -c 'create database teamwork_test;' -U postgres
   - psql -c "CREATE USER charles WITH PASSWORD null;" -U postgres
-  - npm run build
 script:
   - npm test
 after_success:
   - npm run coverage
-  # safelist
-branches:
-  only:
-  - develop

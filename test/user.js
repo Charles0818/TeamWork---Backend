@@ -24,8 +24,6 @@ describe('POST /api/v1/auth/signin', () => {
         res.body.data.token.should.not.be.empty;
         loggedInToken = res.body.data.token;
         loggedInUserId = res.body.data.userId;
-        console.log(loggedInUserId);
-        console.log(loggedInToken);
       });
   });
   it('should throw an error when email does not exist in the database', () => {
