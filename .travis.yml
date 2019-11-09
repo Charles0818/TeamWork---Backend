@@ -8,7 +8,7 @@ branches:
 env:
   global:
   - NODE_ENV=test
-  
+
 cache:
   directories:
     - "node_modules"
@@ -19,7 +19,7 @@ services:
   - postgresql
 
 before_script:
-  - psql -c 'CREATE DATABASE teamwork_test;' -U postgres
+  - psql -c 'CREATE DATABASE teamwork;' -U postgres
   - psql -U postgres -d teamwork_test -a -f init.sql
 script:
   - npm test
