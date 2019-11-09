@@ -19,7 +19,7 @@ describe('POST /api/v1/auth/signin', () => {
         password: '@admin',
       })
       .expect(200)
-      .then((res) => {
+      .expect((res) => {
         res.body.status.should.be.equal('success');
         res.body.data.token.should.not.be.empty;
         loggedInToken = res.body.data.token;
@@ -33,7 +33,7 @@ describe('POST /api/v1/auth/signin', () => {
         password: '@admin',
       })
       .expect(401)
-      .then((res) => {
+      .expect((res) => {
         res.body.error.should.be.equal('User not found');
       });
   });
@@ -44,7 +44,7 @@ describe('POST /api/v1/auth/signin', () => {
         password: '@incorrect',
       })
       .expect(401)
-      .then((res) => {
+      .expect((res) => {
         res.body.error.should.be.equal('Incorrect Password');
       });
   });
