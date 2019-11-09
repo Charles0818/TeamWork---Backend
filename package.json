@@ -4,8 +4,7 @@
   "description": "TeamWork is an internal social network for employees of an organization / company. It serves as a network communicating tool majorly for team collaboration.",
   "main": "server.js",
   "scripts": {
-    "dev": "nodemon --exec babel-node ./app.js",
-    "test": "SET NODE_ENV=test && nyc --require @babel/register  mocha ",
+    "test": "mocha",
     "generate-lcov": "nyc report --reporter=text-lcov > lcov.info",
     "coveralls-coverage": "coveralls < lcov.info",
     "codeclimate-coverage": "codeclimate-test-reporter < lcov.info",
