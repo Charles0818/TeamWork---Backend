@@ -16,6 +16,5 @@ app.use('/api/v1/auth', userRoutes);
 app.use('/api/v1/gifs', gifRoutes);
 app.use('/api/v1/articles', articleRouter);
 app.use('/api/v1/feed', feedRoutes);
-app.use('/api/v1/articles', commentRoutes);
-app.use('/api/v1/gifs', commentRoutes);
+app.use('/api/v1/feed', commentRoutes);
 module.exports = app;
