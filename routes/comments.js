@@ -4,8 +4,8 @@ const auth = require('../middlewares/auth');
 
 
 const router = express.Router();
-router.post('/:contentID/comments', auth, commentCtrl.postComment);
-router.delete('/:contentID/comments/:commentId', auth, commentCtrl.deleteComment);
-router.patch('/:contentID/comments/:commentId', auth, commentCtrl.modifyComment);
-router.patch('/:contentID/comments/:commentId/isFlagged', commentCtrl.flagComment);
+router.post('/:contentId/comments', auth, commentCtrl.postComment);
+router.delete('/:contentId/comments/:commentId', auth, commentCtrl.deleteComment);
+router.patch('/:contentId/comments/:commentId', auth, commentCtrl.modifyComment);
+router.patch('/:contentId/comments/:commentId/isFlagged', commentCtrl.flagComment);
 module.exports = router;

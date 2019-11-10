@@ -63,8 +63,8 @@ exports.postGif = (req, res) => {
 
 exports.deleteGif = (req, res) => {
   const gifId = req.params.id;
-  const publicID = req.body.cloudId;
-  cloudinary.delete(publicID)
+  const publicId = req.body.cloudId;
+  cloudinary.delete(publicId)
     .then(() => query("DELETE FROM feeds WHERE (id=$1 AND type='gif')", [gifId])
       .then(() => res.status(200).json({ message: 'GIF was successfully deleted' })))
     .catch((err) => res.status(400).json({ error: err }));

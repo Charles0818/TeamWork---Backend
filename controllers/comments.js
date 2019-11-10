@@ -53,7 +53,7 @@ exports.modifyComment = (req, res) => {
     }))
     .catch((error) => res.status(404).json({
       status: 'failure',
-      error
+      error: `unable to modify comment, ${error}`
     }));
 };
 
