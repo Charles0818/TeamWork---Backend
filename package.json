@@ -4,11 +4,8 @@
   "description": "TeamWork is an internal social network for employees of an organization / company. It serves as a network communicating tool majorly for team collaboration.",
   "main": "server.js",
   "scripts": {
-    "test": "set NODE_ENV=test && mocha",
-    "generate-lcov": "nyc report --reporter=text-lcov > lcov.info",
-    "coveralls-coverage": "coveralls < lcov.info",
-    "codeclimate-coverage": "codeclimate-test-reporter < lcov.info",
-    "coverage": "nyc npm test && npm run generate-lcov && npm run coveralls-coverage && npm run codeclimate-coverage",
+    "test": "mocha",
+    "coverage": "nyc report --reporter=text-lcov | coveralls",
     "heroku-postbuild": "npm install --production"
   },
   "repository": {
