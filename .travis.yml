@@ -1,6 +1,14 @@
 language: node_js
 node_js:
   - "stable"
+install:
+  - npm install
+
+cache:
+  directories:
+    - "node_modules"
+    - "test"
+
     # safelist
 branches:
   only:
@@ -9,12 +17,6 @@ env:
   global:
   - NODE_ENV=test
 
-cache:
-  directories:
-    - "node_modules"
-    - "test"
-install:
-  - npm install
 services:
   - postgresql
 
@@ -26,4 +28,3 @@ script:
 
 after_success:
   - npm run coverage
-  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
