@@ -2,21 +2,25 @@
 const { query } = require('../config/db');
 
 exports.postArticle = (req, res) => {
-  const { title, article, userId } = req.body;
+  const {
+    title, article, userId, category
+  } = req.body;
   query(`
     INSERT INTO feeds(
         Title,
         Content,
         UserID,
         Type,
+        Category,
         IsFlagged
-    ) VALUES ($1, $2, $3, 'article', false) RETURNING *`, [title, article, userId])
+    ) VALUES ($1, $2, $3, 'article', $4, false) RETURNING *`, [title, article, userId, category])
     .then((result) => res.status(201).json({
       status: 'success',
       data: {
         message: 'Article successfully posted',
         articleId: result.rows[0].id,
         title: result.rows[0].title,
+        category: result.rows[0].category,
         createdOn: result.rows[0].createdOn,
         isFlagged: result.rows[0].isflagged
       }
@@ -45,7 +49,7 @@ exports.modifyArticle = (req, res) => {
   const { id } = req.params;
   const { title, article, userId } = req.body;
   query(`UPDATE feeds SET title = $1, Content = $2 WHERE (id=$3 AND userId=$4)
-  RETURNING *`, [title, article, id, userId]) // Not correct
+  RETURNING *`, [title, article, id, userId])
     .then((result) => res.status(201).json({
       status: 'success',
       data: {

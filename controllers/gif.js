@@ -29,7 +29,7 @@ exports.getOneGif = (req, res) => {
 
 exports.postGif = (req, res) => {
   const file = req.files[0].path;
-  const { title, userID } = req.body;
+  const { title, userId } = req.body;
   // Upload file to Cloudinary
   cloudinary.upload(file)
     .then((image) => {
@@ -37,9 +37,8 @@ exports.postGif = (req, res) => {
         image.url,
         image.public_id
       ];
-      query(`INSERT INTO feeds (
-            Title, Content, UserID, Type
-        ) VALUES ($1, $2, $3, 'gif') RETURNING *;`, [title, imageDetails, userID])
+      query(`INSERT INTO feeds (Title, Content, UserID, Type )
+      VALUES ($1, $2, $3, 'gif') RETURNING *;`, [title, imageDetails, userId])
         .then((result) => res.status(201).json({
           status: 'success',
           data: {

@@ -14,7 +14,7 @@ exports.createUser = (req, res) => {
   let { password } = req.body;
   query('SELECT TRUE FROM users WHERE email=$1', [email])
     .then((boolValue) => {
-      if (boolValue.rows[0].bool === true) {
+      if (boolValue.rows[0] && boolValue.rows[0].bool === true) {
         return res.status(400).json({
           error: 'An exact email already exist in the database',
         });
@@ -36,7 +36,7 @@ exports.createUser = (req, res) => {
             data: {
               message: 'User account successfully created',
               token: req.headers.authorization.split(' ')[1],
-              userId: result.rows[0].id, // cross check
+              userId: result.rows[0].id,
             },
           }))
             .catch((err) => res.status(400).json({
@@ -81,34 +81,31 @@ exports.login = (req, res) => {
 exports.updateUserPic = (req, res) => {
   const file = req.files[0].path;
   const { userId } = req.params.userId;
-  if (file) {
-    // Upload file to Cloudinary
-    let imageDetails = [];
-    cloudinary.upload(file)
-      .then((image) => {
-        imageDetails = [
-          image.url,
-          image.public_id,
-        ];
-        query('UPDATE users SET PhotoDetails=$1 WHERE id=$2 RETURNING *;', [imageDetails, userId])
-          .then((result) => res.status(201).json({
-            status: 'success',
-            data: {
-              userId: result.rows[0].id,
-              cloudId: result.rows[0].content[1],
-              message: 'Profile Picture was successfully updated',
-              photoUrl: result.rows[0].content[0],
-            },
-          }))
-          .catch((err) => res.status(400).json({
-            status: 'failure',
-            error: `unable to connect to database, ${err}`,
-          }));
-      }).catch((err) => res.status(400).json({
-        status: 'failure',
-        error: `Unable to connect to cloud storage, ${err}`,
-      }));
-  }
+  let imageDetails = [];
+  cloudinary.upload(file)
+    .then((image) => {
+      imageDetails = [
+        image.url,
+        image.public_id,
+      ];
+      query('UPDATE users SET PhotoDetails=$1 WHERE id=$2 RETURNING *;', [imageDetails, userId])
+        .then((result) => res.status(201).json({
+          status: 'success',
+          data: {
+            userId: result.rows[0].id,
+            cloudId: result.rows[0].content[1],
+            message: 'Profile Picture was successfully updated',
+            photoUrl: result.rows[0].content[0],
+          },
+        }))
+        .catch((err) => res.status(400).json({
+          status: 'failure',
+          error: `unable to connect to database, ${err}`,
+        }));
+    }).catch((err) => res.status(400).json({
+      status: 'failure',
+      error: `Unable to connect to cloud storage, ${err}`,
+    }));
 };
 
 exports.deleteUser = (req, res) => {
