@@ -7,6 +7,7 @@ const router = express.Router();
 
 router.post('/create-user', auth, userCtrl.createUser);
 router.post('/signin', userCtrl.login);
-router.put('/user/:userId/', multer.any(), userCtrl.updateUserPic);
+router.put('/users/:userId', multer.any(), userCtrl.updateUserPic);
+router.delete('/users/:userId', userCtrl.deleteUser);
 
 module.exports = router;
