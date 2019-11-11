@@ -6,17 +6,26 @@ const request = require('supertest');
 const { expect } = require('chai');
 const { loggedInToken, loggedInUserId } = require('./user');
 const app = require('../app');
+const { query } = require('../config/db');
+
+const requestBody = {
+  title: 'Technology advancement',
+  article: 'The uprising of technology in our world today',
+  userId: loggedInUserId,
+};
+
+const modifiedRequestBody = {
+  title: 'Modified: The enterprise of development',
+  article: 'The uprising of technology in our world today',
+  userId: loggedInUserId,
+};
 
 let articleId;
 describe('POST /api/v1/articles', () => {
   it('Should be able to post an article to the database', () => {
     request(app).post('/api/v1/articles')
       .set('Authorization', loggedInToken)
-      .send({
-        title: 'Technology advancement',
-        article: 'The uprising of technology in our world today',
-        userId: loggedInUserId,
-      })
+      .send(requestBody)
       .expect(201)
       .then((res) => {
         res.body.status.should.equal('success');
@@ -38,9 +47,11 @@ describe('DELETE /api/v1/articles/:id', () => {
       .set('Authorization', loggedInToken)
       .send({
         userId: 5,
-      })
-      .expect(200)
+      });
+    const { userId } = requestBody;
+    query('DELETE FROM feeds WHERE (id=$1 AND userId=$2)', [articleId, userId])
       .then((res) => {
+        res.status.should.be(200);
         res.body.status.should.equal('success');
         res.body.data.message.should.equal('Article successfully deleted');
       })
@@ -58,13 +69,12 @@ describe('PATCH /api/v1/articles/:id', () => {
     request(app).patch(`/api/v1/articles/${articleId}`)
       .set('Content-Type', 'application/json')
       .set('Authorization', loggedInToken)
-      .send({
-        title: 'Modified: The enterprise of development',
-        article: 'The uprising of technology in our world today',
-        userId: loggedInUserId,
-      })
-      .expect(200)
+      .send(modifiedRequestBody);
+    const { title, article, userId } = modifiedRequestBody;
+    query(`UPDATE feeds SET title = $1, Content = $2 WHERE (id=$3 AND userId=$4)
+      RETURNING title, content`, [title, article, articleId, userId])
       .then((res) => {
+        res.status.should.be(201);
         res.body.status.should.equal('success');
         res.body.data.message.should.equal('Article successfully updated');
         res.body.data.title.should.exist;

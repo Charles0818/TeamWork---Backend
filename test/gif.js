@@ -5,6 +5,7 @@
 
 const request = require('supertest');
 const { expect } = require('chai');
+const multer = require('./multer');
 const { loggedInToken, loggedInUserId } = require('./user');
 const app = require('../app');
 
