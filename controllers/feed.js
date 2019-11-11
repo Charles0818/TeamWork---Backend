@@ -7,7 +7,9 @@ exports.getAllPosts = (req, res) => {
       status: 'success',
       data: [...result.rows]
     }))
-    .catch((error) => res.status(404).json({ error: `Unable to display all posts, ${error}` }));
+    .catch((error) => res.status(404).json({
+      error: `Unable to display all posts, ${error}`
+    }));
 };
 
 exports.flag = (req, res) => {
