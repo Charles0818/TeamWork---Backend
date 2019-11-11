@@ -4,6 +4,7 @@
   "description": "TeamWork is an internal social network for employees of an organization / company. It serves as a network communicating tool majorly for team collaboration.",
   "main": "server.js",
   "scripts": {
+    "start": "nodemon server.js",
     "test": "nyc mocha --recursive",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "heroku-postbuild": "npm install --production"
@@ -29,6 +30,7 @@
     "express-promise-router": "^3.0.3",
     "jsonwebtoken": "^8.5.1",
     "multer": "^1.4.2",
+    "nodemon": "^1.19.4",
     "pg": "^7.12.1"
   },
   "devDependencies": {
