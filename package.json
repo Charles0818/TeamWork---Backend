@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start": "nodemon server.js",
-    "test": "nyc mocha --recursive",
+    "test": "set NODE_ENV=test && nyc mocha --recursive --exit",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "heroku-postbuild": "npm install --production"
   },
