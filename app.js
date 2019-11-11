@@ -3,7 +3,7 @@ const cors = require('cors');
 // routes;
 const userRoutes = require('./routes/user');
 const gifRoutes = require('./routes/gif');
-const articleRouter = require('./routes/article');
+const articleRoutes = require('./routes/article');
 const feedRoutes = require('./routes/feed');
 const commentRoutes = require('./routes/comments');
 
@@ -14,7 +14,7 @@ app.use(express.json());
 app.use(urlencoded({ extended: false }));
 app.use('/api/v1/auth', userRoutes);
 app.use('/api/v1/gifs', gifRoutes);
-app.use('/api/v1/articles', articleRouter);
+app.use('/api/v1/articles', articleRoutes);
 app.use('/api/v1/feed', feedRoutes);
 app.use('/api/v1/feed', commentRoutes);
 module.exports = app;
