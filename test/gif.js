@@ -4,12 +4,9 @@
 /* eslint-disable no-unused-vars */
 
 const request = require('supertest');
-const chai = require('chai');
+const { expect } = require('chai');
 const { loggedInToken, loggedInUserId } = require('./user');
 const app = require('../app');
-
-const should = chai.should();
-const { expect } = chai;
 
 let cloudId = '';
 let gifId = null;

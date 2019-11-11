@@ -3,12 +3,9 @@
 /* eslint-disable no-unused-vars */
 
 const request = require('supertest');
-const chai = require('chai');
+const { expect } = require('chai');
 const app = require('../app');
 const { articleId } = require('./article');
-
-const should = chai.should();
-const { expect } = chai;
 
 describe('GET /api/v1/feed', () => {
   it('Should get all articles and gifs and display on the frontend', () => {

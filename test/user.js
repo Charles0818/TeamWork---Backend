@@ -3,11 +3,9 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-undef */
 const request = require('supertest');
-const chai = require('chai');
+const { expect } = require('chai');
 const app = require('../app');
 
-const should = chai.should();
-expect = chai.expect;
 let loggedInToken = '';
 let loggedInUserId;
 
