@@ -5,15 +5,10 @@ exports.postArticle = (req, res) => {
   const {
     title, article, userId, category
   } = req.body;
+  console.log([article]);
   query(`
-    INSERT INTO feeds(
-        Title,
-        Content,
-        UserID,
-        Type,
-        Category,
-        IsFlagged
-    ) VALUES ($1, $2, $3, 'article', $4, false) RETURNING *`, [title, article, userId, category])
+    INSERT INTO feeds(Title, Content, UserID, Type, Category, IsFlagged)
+    VALUES ($1, $2, $3, 'article', $4, false) RETURNING *`, [title, [article], userId, category])
     .then((result) => res.status(201).json({
       status: 'success',
       data: {

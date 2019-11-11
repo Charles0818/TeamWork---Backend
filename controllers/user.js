@@ -7,8 +7,7 @@ require('dotenv').config();
 
 exports.createUser = (req, res) => {
   const {
-    firstName, lastName, email,
-    gender, jobRole, department,
+    firstName, lastName, email, gender, jobRole, department,
     address, accountType,
   } = req.body;
   let { password } = req.body;
