@@ -6,7 +6,7 @@ before_install:
   - nvm install
 
 install:
-   - travis_wait npm install
+  npm install
 
 cache:
   directories:
