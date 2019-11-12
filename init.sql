@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS
 );
 
 INSERT INTO feeds(Title, Content, UserID, Type, Category)
-    VALUES('title', )
+    VALUES('title', '{"content"}', 1, 'article', '{"category"}')
 
 CREATE TABLE IF NOT EXISTS 
     comments (
