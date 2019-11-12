@@ -12,6 +12,7 @@ const requestBody = {
   title: 'Technology advancement',
   article: 'The uprising of technology in our world today',
   userId: loggedInUserId,
+  category: ['cat1', 'cat2'],
 };
 
 const modifiedRequestBody = {
@@ -23,11 +24,14 @@ const modifiedRequestBody = {
 let articleId;
 describe('POST /api/v1/articles', () => {
   it('Should be able to post an article to the database', () => {
+    const { title, article, userId } = requestBody;
     request(app).post('/api/v1/articles')
       .set('Authorization', loggedInToken)
       .send(requestBody)
-      .expect(201)
+      . query(`INSERT INTO feeds(Title, Content, UserID, Type, Category, IsFlagged)
+      VALUES ($1, $2, $3, 'article', $4, false) RETURNING *`, [title, [article], userId, category])
       .then((res) => {
+        res.status(201).should.exist;
         res.body.status.should.equal('success');
         res.body.data.message.should.equal('Article successfully posted');
         articleId = res.body.data.articleId;

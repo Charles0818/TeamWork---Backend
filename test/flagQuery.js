@@ -11,7 +11,7 @@ const { articleId } = require('./article');
 const req = {
   header: {},
   params: {
-    id: 1,
+    id: articleId,
     commentId: 1,
   },
   body: {
