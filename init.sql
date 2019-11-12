@@ -26,7 +26,6 @@ CREATE TABLE IF NOT EXISTS
         UserID int NOT NULL,
         Type ContentType,
         Category TEXT [],
-        IsFlagged BOOL,
         CreatedOn TIMESTAMP NOT NULL DEFAULT NOW()
 );
 
@@ -36,9 +35,37 @@ CREATE TABLE IF NOT EXISTS
         Comment TEXT NOT NULL,
         UserID int NOT NULL,
         ContentID int NOT NULL,
-        IsFlagged BOOL,
         CreatedOn TIMESTAMP NOT NULL DEFAULT NOW(),
         FOREIGN KEY (ContentID) REFERENCES feeds(id) ON DELETE CASCADE
 );
 
 
+CREATE TABLE IF NOT EXISTS
+    feedFlag (
+        id BIGSERIAL NOT NULL PRIMARY KEY,
+        ContentID INT NOT NULL,
+        UserID BIGSERIAL NOT NULL,
+        FOREIGN KEY (ContentID) REFERENCES feeds(id) ON DELETE CASCADE,
+        FOREIGN KEY (UserID) REFERENCES users(id) ON DELETE CASCADE
+);
+
+
+CREATE TABLE IF NOT EXISTS
+    commentFlag (
+        id BIGSERIAL NOT NULL PRIMARY KEY,
+        CommentID INT NOT NULL,
+        UserID BIGSERIAL NOT NULL,
+        FOREIGN KEY (CommentID) REFERENCES comments(id) ON DELETE CASCADE,
+        FOREIGN KEY (UserID) REFERENCES users(id) ON DELETE CASCADE
+    )
+    
+
+    ADDING A USER 
+    The query should be written in a way that it should first
+    check whether the commentID/contentID exists in the table,
+    if it exists, it should update the users attribute by adding
+    the incoming userId to the existing list of users who flagged that same post.
+
+    If the commentID/contentID doesn't exist, a new row should be created.
+
+    NOTE: The commentID/contentID may act as primary key.

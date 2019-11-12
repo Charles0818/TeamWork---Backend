@@ -1,5 +1,6 @@
 /* eslint-disable comma-dangle */
 const { query } = require('../config/db');
+const { flagQuery } = require('./flagQuery');
 
 exports.postComment = (req, res) => {
   const { contentId } = req.params;
@@ -7,9 +8,8 @@ exports.postComment = (req, res) => {
   query(`INSERT INTO comments(
             comment,
             UserID,
-            contentID,
-            IsFlagged
-        ) VALUES ($1, $2, $3, false) RETURNING *`, [comment, userId, contentId])
+            contentID
+        ) VALUES ($1, $2, $3) RETURNING *`, [comment, userId, contentId])
     .then((result) => res.status(201).json({
       status: 'success',
       data: {
@@ -57,18 +57,13 @@ exports.modifyComment = (req, res) => {
     }));
 };
 
-exports.flagComment = (req, res) => {
-  const { commentId, contentId } = req.params;
-  const { isFlagged } = req.body;
-  query(`UPDATE comments SET isFlagged = $1 WHERE (id = $2 AND contentID =$3)
-  RETURNING IsFlagged`, [isFlagged, commentId, contentId])
+exports.flag = (req, res) => {
+  flagQuery(req, res, 'commentFlag')
     .then((result) => res.status(201).json({
       status: 'success',
-      message: 'Comment successfully updated',
-      data: result
-    }))
-    .catch((error) => res.status(404).json({
+      data: result.rows[0]
+    })).catch((err) => res.status(400).json({
       status: 'failure',
-      error
+      error: `!!!Operation failed, ${err}`
     }));
 };

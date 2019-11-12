@@ -1,5 +1,6 @@
 /* eslint-disable comma-dangle */
 const { query } = require('../config/db');
+const { flagQuery } = require('./flagQuery');
 
 exports.getAllPosts = (req, res) => {
   query('SELECT * FROM feeds ORDER BY CreatedOn DESC;')
@@ -13,13 +14,12 @@ exports.getAllPosts = (req, res) => {
 };
 
 exports.flag = (req, res) => {
-  query(`UPDATE feeds SET IsFlagged=$1 WHERE id=$2
-  RETURNING IsFlagged`, [req.body.isFlagged, req.params.id])
+  flagQuery(req, res, 'feedflag')
     .then((result) => res.status(201).json({
       status: 'success',
-      data: result
+      data: result.rows[0]
     })).catch((err) => res.status(400).json({
       status: 'failure',
-      error: err
+      error: `!!!Operation failed, ${err}`
     }));
 };
