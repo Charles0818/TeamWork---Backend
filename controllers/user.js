@@ -65,6 +65,7 @@ exports.login = (req, res) => {
             status: 'success',
             data: {
               userId: user.rows[0].id,
+              account_type: user.rows[0].account_type,
               token,
             },
           });

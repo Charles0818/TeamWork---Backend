@@ -29,9 +29,6 @@ CREATE TABLE IF NOT EXISTS
         CreatedOn TIMESTAMP NOT NULL DEFAULT NOW()
 );
 
-INSERT INTO feeds(Title, Content, UserID, Type, Category)
-    VALUES('title', '{"content"}', 1, 'article', '{"category"}')
-
 CREATE TABLE IF NOT EXISTS 
     comments (
         id BIGSERIAL NOT NULL PRIMARY KEY,

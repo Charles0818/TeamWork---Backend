@@ -24,7 +24,9 @@ const modifiedRequestBody = {
 let articleId;
 describe('POST /api/v1/articles', () => {
   it('Should be able to post an article to the database', () => {
-    const { title, article, userId, category } = requestBody;
+    const {
+      title, article, userId, category,
+    } = requestBody;
     request(app).post('/api/v1/articles')
       .set('Authorization', loggedInToken)
       .send(requestBody)
