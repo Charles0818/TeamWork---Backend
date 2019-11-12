@@ -20,10 +20,10 @@ const req = {
 };
 describe('a controller for flagging an article/gif/comment', () => {
   const { userId, isFlagged } = req.body;
-  const { id, commentId } = req.params;
+  const { id } = req.params;
   const { table } = req;
-  const ref = id ? 'ContentID' : 'CommentID';
-  const refId = id || commentId;
+  const ref = id ? 'ContentID' : '';
+  const refId = id || null;
   it('Should be able to flag/unflag an article/gif/comment', () => {
     if (isFlagged) {
       return (
