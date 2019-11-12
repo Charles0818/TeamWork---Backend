@@ -2,14 +2,14 @@
 const { query } = require('../config/db');
 
 exports.postComment = (req, res) => {
-  const { contentID } = req.params;
-  const { comment, userID } = req.body;
+  const { contentId } = req.params;
+  const { comment, userId } = req.body;
   query(`INSERT INTO comments(
             comment,
             UserID,
             contentID,
             IsFlagged
-        ) VALUES ($1, $2, $3, false) RETURNING *`, [comment, userID, contentID])
+        ) VALUES ($1, $2, $3, false) RETURNING *`, [comment, userId, contentId])
     .then((result) => res.status(201).json({
       status: 'success',
       data: {

@@ -5,7 +5,7 @@ exports.postArticle = (req, res) => {
   const {
     title, article, userId, category
   } = req.body;
-  console.log([article]);
+  console.log(req.body.userId);
   query(`
     INSERT INTO feeds(Title, Content, UserID, Type, Category, IsFlagged)
     VALUES ($1, $2, $3, 'article', $4, false) RETURNING *`, [title, [article], userId, category])
@@ -29,7 +29,7 @@ exports.postArticle = (req, res) => {
 exports.deleteArticle = (req, res) => {
   const { id } = req.params;
   const { userId } = req.body;
-  query('DELETE FROM feeds WHERE (id=$1 AND userId=$2)', [id, userId])
+  query("DELETE FROM feeds WHERE (id=$1 AND userId=$2 AND type='article')", [id, userId])
     .then(() => res.status(200).json({
       status: 'success',
       message: 'Article successfully deleted'
