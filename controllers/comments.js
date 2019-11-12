@@ -27,8 +27,8 @@ exports.postComment = (req, res) => {
 };
 
 exports.deleteComment = (req, res) => {
-  const { commentId } = req.params;
-  query('DELETE FROM comments WHERE id=$1', [commentId])
+  const { commentId, contentId } = req.params;
+  query('DELETE FROM comments WHERE (id=$1 AND contentID = $2)', [commentId, contentId])
     .then(() => res.status(200).json({
       status: 'success',
       message: 'Comment successfully deleted'
@@ -40,9 +40,9 @@ exports.deleteComment = (req, res) => {
 };
 
 exports.modifyComment = (req, res) => {
-  const { commentId } = req.params;
+  const { commentId, contentId } = req.params;
   const { comment } = req.body;
-  query('UPDATE comments SET comment = $1 WHERE id = $2 RETURNING *', [comment, commentId])
+  query('UPDATE comments SET comment = $1 (WHERE id = $2 AND contentID =$3) RETURNING *', [comment, commentId, contentId])
     .then((result) => res.status(201).json({
       status: 'success',
       data: {
@@ -58,9 +58,10 @@ exports.modifyComment = (req, res) => {
 };
 
 exports.flagComment = (req, res) => {
-  const { commentId } = req.params;
+  const { commentId, contentId } = req.params;
   const { isFlagged } = req.body;
-  query('UPDATE comments SET isFlagged = $1 WHERE id = $2 RETURNING IsFlagged', [isFlagged, commentId])
+  query(`UPDATE comments SET isFlagged = $1 WHERE (id = $2 AND contentID =$3)
+  RETURNING IsFlagged`, [isFlagged, commentId, contentId])
     .then((result) => res.status(201).json({
       status: 'success',
       message: 'Comment successfully updated',

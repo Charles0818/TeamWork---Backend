@@ -65,14 +65,14 @@ describe('DELETE /api/v1/articles/:id', () => {
   });
 });
 describe('PATCH /api/v1/articles/:id', () => {
-  it('Should be able to delete an article from the database', () => {
+  it('Should be able to modify an article and be updated in the database', () => {
     request(app).patch(`/api/v1/articles/${articleId}`)
       .set('Content-Type', 'application/json')
       .set('Authorization', loggedInToken)
       .send(modifiedRequestBody);
     const { title, article, userId } = modifiedRequestBody;
     query(`UPDATE feeds SET title = $1, Content = $2 WHERE (id=$3 AND userId=$4)
-      RETURNING title, content`, [title, article, articleId, userId])
+      RETURNING *`, [title, article, articleId, userId])
       .then((res) => {
         res.status.should.be(201);
         res.body.status.should.equal('success');
@@ -81,8 +81,8 @@ describe('PATCH /api/v1/articles/:id', () => {
         res.body.data.article.should.exist;
       })
       .catch((err) => {
-        expect(400);
         expect((res) => {
+          res.status(404).json.should.be.a('object');
           res.body.status.should.equal('failure');
           res.body.error.should.equal(`Could not update article, ${err}`);
         });

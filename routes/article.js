@@ -7,5 +7,5 @@ const router = express.Router();
 router.post('/', auth, articleCtrl.postArticle);
 router.delete('/:id', auth, articleCtrl.deleteArticle);
 router.patch('/:id', auth, articleCtrl.modifyArticle);
-router.get('/:id', articleCtrl.getOneArticle);
+router.get('/:id', auth, articleCtrl.getOneArticle);
 module.exports = router;

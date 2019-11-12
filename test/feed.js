@@ -15,11 +15,11 @@ describe('GET /api/v1/feed', () => {
         res.body.status.should.equal('success');
         res.body.data.should.not.be.empty;
       })
-      .catch((err) => {
-        expect(400);
+      .catch((error) => {
         expect((res) => {
+          res.status(400).should.exist;
           res.body.status.should.equal('failure');
-          res.body.error.should.equal(err);
+          res.body.error.should.equal(error);
         });
       });
   });
