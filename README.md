@@ -26,5 +26,5 @@ first. (/feed)
 12. Employees can view a specific gif post. (/gifs/:gifId)
 13. Employees can flag a comment, article and/or gif as inappropriate.
 for comment => (/gifs/:gifId/comment/:commentId/flag) OR (/articles/:articleId/comment/:commentId/flag),
-for article/gif (/feed/:contentId/flag)
+for article/gif (/feed/:contentId/flag) 
 ● Admin can delete a comment, article and/or gif flagged as inappropriate. (Coming soon)
