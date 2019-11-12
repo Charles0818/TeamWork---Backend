@@ -24,12 +24,12 @@ const modifiedRequestBody = {
 let articleId;
 describe('POST /api/v1/articles', () => {
   it('Should be able to post an article to the database', () => {
-    const { title, article, userId } = requestBody;
+    const { title, article, userId, category } = requestBody;
     request(app).post('/api/v1/articles')
       .set('Authorization', loggedInToken)
       .send(requestBody)
-      . query(`INSERT INTO feeds(Title, Content, UserID, Type, Category, IsFlagged)
-      VALUES ($1, $2, $3, 'article', $4, false) RETURNING *`, [title, [article], userId, category])
+      . query(`INSERT INTO feeds(Title, Content, UserID, Type, Category)
+      VALUES ($1, $2, $3, 'article', $4) RETURNING *`, [title, [article], userId, category])
       .then((res) => {
         res.status(201).should.exist;
         res.body.status.should.equal('success');
