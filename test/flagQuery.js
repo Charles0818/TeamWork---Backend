@@ -10,7 +10,7 @@ const { query } = require('../config/db');
 const req = {
   header: {},
   params: {
-    commentId: 1,
+    id: 1,
   },
   body: {
     userId: 1,

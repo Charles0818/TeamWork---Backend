@@ -57,15 +57,4 @@ CREATE TABLE IF NOT EXISTS
         UserID BIGSERIAL NOT NULL,
         FOREIGN KEY (CommentID) REFERENCES comments(id) ON DELETE CASCADE,
         FOREIGN KEY (UserID) REFERENCES users(id) ON DELETE CASCADE
-    )
-    
-
-    ADDING A USER 
-    The query should be written in a way that it should first
-    check whether the commentID/contentID exists in the table,
-    if it exists, it should update the users attribute by adding
-    the incoming userId to the existing list of users who flagged that same post.
-
-    If the commentID/contentID doesn't exist, a new row should be created.
-
-    NOTE: The commentID/contentID may act as primary key.
+    );
