@@ -6,11 +6,12 @@
 const request = require('supertest');
 const { expect } = require('chai');
 const { query } = require('../config/db');
+const { articleId } = require('./article');
 
 const req = {
   header: {},
   params: {
-    id: 2,
+    id: 1,
     commentId: 1,
   },
   body: {
