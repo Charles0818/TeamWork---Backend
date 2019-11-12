@@ -10,7 +10,8 @@ const { query } = require('../config/db');
 const req = {
   header: {},
   params: {
-    id: 1,
+    id: 2,
+    commentId: 1,
   },
   body: {
     userId: 1,
@@ -20,10 +21,10 @@ const req = {
 };
 describe('a controller for flagging an article/gif/comment', () => {
   const { userId, isFlagged } = req.body;
-  const { id } = req.params;
+  const { id, commentId } = req.params;
   const { table } = req;
-  const ref = id ? 'ContentID' : '';
-  const refId = id || null;
+  const ref = id ? 'ContentID' : 'CommentID';
+  const refId = id || commentId;
   it('Should be able to flag/unflag an article/gif/comment', () => {
     if (isFlagged) {
       return (
