@@ -51,7 +51,7 @@ exports.createUser = (req, res) => {
 };
 
 exports.login = (req, res) => {
-  query(`SELECT DISTINCT email, password, id FROM users WHERE EXISTS
+  query(`SELECT DISTINCT email, password, id, Account_type FROM users WHERE EXISTS
   (SELECT TRUE FROM users WHERE email=$1)`, [req.body.email])
     .then((user) => {
       if (user.rows.length === 0) {
