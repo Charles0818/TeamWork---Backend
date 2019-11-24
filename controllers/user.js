@@ -51,7 +51,7 @@ exports.createUser = (req, res) => {
 };
 
 exports.login = (req, res) => {
-  query(`SELECT DISTINCT email, password, id, Account_type FROM users WHERE EXISTS
+  query(`SELECT DISTINCT  id, firstName, lastName, email, password, gender, Account_type, department, address, jobRole, PhotoDetails, Interests FROM users WHERE EXISTS
   (SELECT TRUE FROM users WHERE email=$1)`, [req.body.email])
     .then((user) => {
       if (user.rows.length === 0) {
@@ -61,11 +61,23 @@ exports.login = (req, res) => {
         .then((valid) => {
           if (!valid) return res.status(401).json({ error: 'Incorrect Password' });
           const token = jwt.sign({ userId: user.rows[0].id }, process.env.SECRET, { expiresIn: '24h' });
+          const {
+            firstname: firstName, lastname: lastName, gender, account_type: AccountType, department,
+            jobrole: jobRole, address, interests, photodetails: photoDetails,
+          } = user.rows[0];
           res.status(200).json({
             status: 'success',
             data: {
               userId: user.rows[0].id,
-              account_type: user.rows[0].account_type,
+              AccountType,
+              gender,
+              lastName,
+              firstName,
+              department,
+              jobRole,
+              address,
+              interests,
+              photoDetails,
               token,
             },
           });

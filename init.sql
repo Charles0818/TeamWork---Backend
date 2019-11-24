@@ -14,7 +14,8 @@ CREATE TABLE IF NOT EXISTS
         department VARCHAR(128) NOT NULL,
         address VARCHAR(128) NOT NULL,
         PhotoDetails VARCHAR(255) [],
-        Account_type account_type
+        Interests VARCHAR(128) [],
+        Account_type account_type NOT NULL
 );
 
 
