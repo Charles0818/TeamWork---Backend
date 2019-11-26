@@ -9,8 +9,9 @@ module.exports = (req, res, next) => {
     const decodedToken = jwt.verify(token, process.env.SECRET);
     let { userId } = decodedToken;
     userId = parseInt(userId, 10);
-    parseInt(req.body.userId, 10);
-    if (Number.isNaN(userId) || (req.body.userId && req.body.userId !== userId)) {
+    let reqId = req.body.userId || req.params.userId;
+    reqId = parseInt(reqId, 10);
+    if (Number.isNaN(userId) || (reqId && reqId !== userId)) {
       throw new Error('Invalid user ID');
     } else {
       next();

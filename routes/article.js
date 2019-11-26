@@ -5,7 +5,7 @@ const auth = require('../middlewares/auth');
 const router = express.Router();
 
 router.post('/', auth, articleCtrl.postArticle);
-router.delete('/:id', auth, articleCtrl.deleteArticle);
+router.delete('/:id/:userId', auth, articleCtrl.deleteArticle);
 router.patch('/:id', auth, articleCtrl.modifyArticle);
-router.get('/:id', auth, articleCtrl.getOneArticle);
+router.get('/:id/:userId', auth, articleCtrl.getOneArticle);
 module.exports = router;
