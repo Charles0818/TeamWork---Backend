@@ -121,7 +121,7 @@ exports.updateUserPic = (req, res) => {
 };
 
 exports.deleteUser = (req, res) => {
-  const id = parseInt(req.params.id, 10);
+  const id = parseInt(req.params.employeeId, 10);
   query('DELETE FROM users WHERE id=$1', [id])
     .then(() => res.status(200).json(`User with ID: ${id} was successfully deleted`))
     .catch((err) => res.status(400).json({
