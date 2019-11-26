@@ -51,8 +51,8 @@ exports.createUser = (req, res) => {
 };
 
 exports.login = (req, res) => {
-  query(`SELECT DISTINCT  id, firstName, lastName, email, password, gender, Account_type, department, address, jobRole, PhotoDetails, Interests FROM users WHERE EXISTS
-  (SELECT TRUE FROM users WHERE email=$1)`, [req.body.email])
+  query(`SELECT DISTINCT id, firstName, lastName, email, password, gender, Account_type, department, address, jobRole, PhotoDetails, Interests 
+  FROM users WHERE email=$1`, [req.body.email])
     .then((user) => {
       if (user.rows.length === 0) {
         return res.status(401).json({ error: 'User not found' });
