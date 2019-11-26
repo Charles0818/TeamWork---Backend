@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors');
 // routes;
 const userRoutes = require('./routes/user');
 const gifRoutes = require('./routes/gif');
@@ -8,12 +9,7 @@ const commentRoutes = require('./routes/comments');
 
 const { urlencoded } = express;
 const app = express();
-app.use((req, res, next) => {
-  res.set('Access-Control-Allow-Origin', '*');
-  res.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization');
-  res.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
-  next();
-});
+app.use(cors());
 app.use(express.json());
 app.use(urlencoded({ extended: false }));
 app.use('/api/v1/auth', userRoutes);
