@@ -62,14 +62,14 @@ exports.login = (req, res) => {
           if (!valid) return res.status(401).json({ error: 'Incorrect Password' });
           const token = jwt.sign({ userId: user.rows[0].id }, process.env.SECRET, { expiresIn: '24h' });
           const {
-            firstname: firstName, lastname: lastName, gender, account_type: AccountType, department,
+            firstname: firstName, lastname: lastName, gender, account_type: accountType, department,
             jobrole: jobRole, address, interests, photodetails: photoDetails,
           } = user.rows[0];
           res.status(200).json({
             status: 'success',
             data: {
               userId: user.rows[0].id,
-              AccountType,
+              accountType,
               gender,
               lastName,
               firstName,
