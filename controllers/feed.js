@@ -5,8 +5,7 @@ const { flagQuery } = require('./flagQuery');
 exports.getAllPosts = (req, res) => {
   query('SELECT * FROM feeds ORDER BY CreatedOn DESC;')
     .then((result) => {
-      const feed = result.rows.map((el) => {
-        const content = el;
+      const feed = result.rows.map((content) => {
         query(`SELECT COUNT(id) FROM comments WHERE ContentID = ${content.id}`)
           .then((value) => {
             content.commentCount = value;
