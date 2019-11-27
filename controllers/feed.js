@@ -5,15 +5,18 @@ const { flagQuery } = require('./flagQuery');
 exports.getAllPosts = (req, res) => {
   query('SELECT * FROM feeds ORDER BY CreatedOn DESC;')
     .then((result) => {
-      const feed = result.rows.map((content) => {
+      const feed = result.rows.map((el) => {
+        const content = el;
         query(`SELECT COUNT(id) FROM comments WHERE ContentID = ${content.id}`)
           .then((value) => {
             content.commentCount = value;
+            return content;
           })
           .catch((err) => console.log(err));
         query(`SELECT COUNT(id) FROM feedFlag WHERE ContentID = ${content.id}`)
           .then((value) => {
             content.flagCount = value;
+            return content;
           })
           .catch((err) => console.log(err));
         return content;
