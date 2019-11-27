@@ -16,7 +16,7 @@ exports.postArticle = (req, res) => {
         title: result.rows[0].title,
         category: result.rows[0].category,
         createdOn: result.rows[0].createdOn,
-        isFlagged: result.rows[0].isflagged
+        contentType: result.rows[0].type
       }
     }))
     .catch((err) => res.status(400).json({

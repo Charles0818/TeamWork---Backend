@@ -57,21 +57,6 @@ exports.modifyComment = (req, res) => {
     }));
 };
 
-exports.count = (req, res) => {
-  const { contentId } = req.params;
-  query('SELECT COUNT(*) FROM comments WHERE contentID =$1', [contentId])
-    .then((result) => res.status(201).json({
-      status: 'success',
-      data: {
-        length: result.rows
-      }
-    }))
-    .catch((error) => res.status(404).json({
-      status: 'failure',
-      error: `unable to validate number of comments, ${error}`
-    }));
-};
-
 exports.flag = (req, res) => {
   flagQuery(req, res, 'commentFlag')
     .then((result) => res.status(201).json({
