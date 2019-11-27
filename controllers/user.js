@@ -129,3 +129,36 @@ exports.deleteUser = (req, res) => {
       error: err,
     }));
 };
+
+exports.getAllUsers = (req, res) => {
+  const { userId } = req.params;
+  query(`SELECT DISTINCT id, firstName, lastName, gender, department, address, jobRole, PhotoDetails, Interests 
+  FROM users WHERE NOT id =$1 `, [userId])
+    .then((result) => {
+      const users = result.rows.map((user) => {
+        const {
+          firstname: firstName, lastname: lastName, gender, department, id: employeeId,
+          jobrole: jobRole, address, interests, photodetails: photoDetails,
+        } = user;
+        return {
+          firstName,
+          lastName,
+          gender,
+          department,
+          employeeId,
+          jobRole,
+          address,
+          interests,
+          photoDetails,
+        };
+      });
+      return res.status(200).json({
+        status: 'success',
+        data: users,
+      });
+    })
+    .catch((err) => res.status(400).json({
+      status: 'failure',
+      error: err,
+    }));
+};
