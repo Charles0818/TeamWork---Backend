@@ -4,10 +4,17 @@ const { flagQuery } = require('./flagQuery');
 
 exports.getAllPosts = (req, res) => {
   query('SELECT * FROM feeds ORDER BY CreatedOn DESC;')
-    .then((result) => res.status(200).json({
-      status: 'success',
-      data: result.rows
-    }))
+    .then((result) => {
+      query(`SELECT id, comment, contentID, userID, createdOn
+       FROM comments;`)
+        .then((comments) => res.status(200).json({
+          status: 'success',
+          data: {
+            content: result.rows,
+            comments: comments.rows
+          }
+        }));
+    })
     .catch((error) => res.status(404).json({
       error: `Unable to display all posts, ${error}`
     }));
