@@ -15,7 +15,7 @@ exports.getAllPosts = (req, res) => {
                 data: {
                   content: result.rows,
                   comments: comments.rows,
-                  flags,
+                  flags: flags.rows,
                 }
               });
             });
