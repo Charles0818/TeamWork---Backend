@@ -133,7 +133,7 @@ exports.deleteUser = (req, res) => {
 exports.getAllUsers = (req, res) => {
   const { userId } = req.params;
   query(`SELECT DISTINCT id, firstName, lastName, gender, department, address, jobRole, PhotoDetails, Interests 
-  FROM users WHERE NOT id =$1 `, [userId])
+  FROM users`, [userId])
     .then((result) => {
       const users = result.rows.map((user) => {
         const {
