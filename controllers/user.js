@@ -136,7 +136,7 @@ exports.getAllUsers = (req, res) => {
     .then((result) => {
       const users = result.rows.map((user) => {
         const {
-          firstname: firstName, lastname: lastName, gender, department, employeeId,
+          firstname: firstName, lastname: lastName, gender, department, id: employeeId,
           jobrole: jobRole, address, interests, photodetails: photoDetails,
         } = user;
         return {
