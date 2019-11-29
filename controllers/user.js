@@ -136,7 +136,7 @@ exports.getAllUsers = (req, res) => {
     .then((result) => {
       const users = result.rows.map((user) => {
         const {
-          firstname: firstName, lastname: lastName, gender, department, id: employeeId,
+          firstname: firstName, lastname: lastName, gender, department, employeeId,
           jobrole: jobRole, address, interests, photodetails: photoDetails,
         } = user;
         return {
@@ -144,7 +144,7 @@ exports.getAllUsers = (req, res) => {
           lastName,
           gender,
           department,
-          employeeId,
+          employeeId: parseInt(employeeId, 10),
           jobRole,
           address,
           interests,
