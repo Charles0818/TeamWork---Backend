@@ -68,7 +68,7 @@ exports.login = (req, res) => {
           res.status(200).json({
             status: 'success',
             data: {
-              userId: user.rows[0].id,
+              userId: parseInt(user.rows[0].id, 10),
               accountType,
               gender,
               lastName,
