@@ -46,9 +46,11 @@ exports.modifyArticle = (req, res) => {
     .then((result) => res.status(201).json({
       status: 'success',
       data: {
-        message: ' Article successfully updated ',
+        message: 'Article successfully updated ',
         title: result.rows[0].title,
-        article: result.rows[0].content
+        article: result.rows[0].content,
+        category: result.rows[0].category,
+        createdOn: result.rows[0].createdOn,
       }
     }))
     .catch((err) => res.status(404).json({
