@@ -42,7 +42,7 @@ exports.modifyArticle = (req, res) => {
   const { id } = req.params;
   const { title, article, userId } = req.body;
   query(`UPDATE feeds SET title = $1, Content = $2 WHERE (id=$3 AND userId=$4)
-  RETURNING *`, [title, article, id, userId])
+  RETURNING *`, [title, [article], id, userId])
     .then((result) => res.status(201).json({
       status: 'success',
       data: {
