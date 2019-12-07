@@ -40,9 +40,11 @@ exports.deleteArticle = (req, res) => {
 
 exports.modifyArticle = (req, res) => {
   const { id } = req.params;
-  const { title, article, userId } = req.body;
-  query(`UPDATE feeds SET title = $1, Content = $2 WHERE (id=$3 AND userId=$4)
-  RETURNING *`, [title, [article], id, userId])
+  const {
+    title, article, category, userId,
+  } = req.body;
+  query(`UPDATE feeds SET title = $1, Content = $2, Category=$3 WHERE (id=$4 AND userId=$5)
+  RETURNING *`, [title, [article], category, id, userId])
     .then((result) => res.status(201).json({
       status: 'success',
       data: {
