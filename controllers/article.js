@@ -26,9 +26,8 @@ exports.postArticle = (req, res) => {
 };
 
 exports.deleteArticle = (req, res) => {
-  const { id } = req.params;
-  const { userId } = req.body;
-  query("DELETE FROM feeds WHERE (id=$1 AND userId=$2 AND type='article')", [id, userId])
+  const { id, userId } = req.params;
+  query("DELETE FROM feeds WHERE (id=$1 AND userID=$2 AND type='article')", [id, userId])
     .then(() => res.status(200).json({
       status: 'success',
       message: 'Article successfully deleted'
