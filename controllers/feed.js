@@ -28,27 +28,27 @@ exports.getAllPosts = (req, res) => {
 
 exports.getAllPostsByAuthor = (req, res) => {
   const { employeeId } = req.params;
-  query('SELECT * FROM feeds WHERE id=$1 ORDER BY CreatedOn DESC;', [employeeId])
-  .then((result) => {
-    query(`SELECT id, comment, contentID, userID, createdOn
+  query('SELECT * FROM feeds WHERE userID=$1 ORDER BY CreatedOn DESC;', [employeeId])
+    .then((result) => {
+      query(`SELECT id, comment, contentID, userID, createdOn
      FROM comments;`)
-      .then((comments) => {
-        query('SELECT * from feedFlag;')
-          .then((flags) => {
-            res.status(200).json({
-              status: 'success',
-              data: {
-                content: result.rows,
-                comments: comments.rows,
-                flags: flags.rows,
-              }
+        .then((comments) => {
+          query('SELECT * from feedFlag;')
+            .then((flags) => {
+              res.status(200).json({
+                status: 'success',
+                data: {
+                  content: result.rows,
+                  comments: comments.rows,
+                  flags: flags.rows,
+                }
+              });
             });
-          });
-      });
-  })
-  .catch((error) => res.status(404).json({
-    error: `Unable to display all posts, ${error}`
-  }));
+        });
+    })
+    .catch((error) => res.status(404).json({
+      error: `Unable to display all posts, ${error}`
+    }));
 };
 
 exports.flag = (req, res) => {
