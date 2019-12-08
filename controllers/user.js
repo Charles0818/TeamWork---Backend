@@ -92,7 +92,7 @@ exports.login = (req, res) => {
 
 exports.updateUserPic = (req, res) => {
   const file = req.files[0].path;
-  const { userId } = req.params.userId;
+  const { userId } = req.params;
   let imageDetails = [];
   cloudinary.upload(file)
     .then((image) => {
