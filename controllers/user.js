@@ -105,9 +105,8 @@ exports.updateUserPic = (req, res) => {
           status: 'success',
           data: {
             userId: result.rows[0].id,
-            cloudId: result.rows[0].content[1],
+            photoDetails: result.rows[0].photodetails,
             message: 'Profile Picture was successfully updated',
-            photoUrl: result.rows[0].content[0],
           },
         }))
         .catch((err) => res.status(400).json({
