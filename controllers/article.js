@@ -64,19 +64,25 @@ exports.modifyArticle = (req, res) => {
 exports.getOneArticle = (req, res) => {
   const { id } = req.params;
   query(
-    `SELECT DISTINCT id, title, content, type, createdOn
+    `SELECT DISTINCT id, title, content, type, userID, createdOn
     FROM feeds WHERE (id=$1 AND type='article');`, [id]
   )
     .then((content) => {
       query(`SELECT id, comment, contentID, userID, createdOn
        FROM comments WHERE contentID = $1`, [content.rows[0].id])
-        .then((comments) => res.status(200).json({
-          status: 'success',
-          data: {
-            content: content.rows[0],
-            comments: comments.rows
-          }
-        }));
+        .then((comments) => {
+          query('SELECT * from feedFlag WHERE ContentID = $1;', [content.rows[0].id])
+            .then((flags) => {
+              res.status(200).json({
+                status: 'success',
+                data: {
+                  content: content.rows[0],
+                  comments: comments.rows,
+                  flags: flags.rows,
+                }
+              });
+            });
+        });
     })
     .catch((error) => res.status(404).json({
       status: 'failure',
