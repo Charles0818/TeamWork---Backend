@@ -61,3 +61,17 @@ exports.flag = (req, res) => {
       error: `!!!Operation failed, ${err}`
     }));
 };
+
+exports.getFlagStats = (req, res) => {
+  const { contentId } = req.params;
+  query('SELECT * FROM feedFlag WHERE contentID =$1;', [contentId])
+    .then((result) => res.status(200).json({
+      status: 'success',
+      data: {
+        flagStats: result.rows
+      }
+    })).catch((err) => res.status(400).json({
+      status: 'failure',
+      error: err
+    }));
+};

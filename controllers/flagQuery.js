@@ -9,7 +9,7 @@ const flagQuery = (req, res, table) => {
   if (isFlagged) {
     return (
       query(`INSERT INTO ${table} (${ref}, UserID)
-      VALUES($1, $2) RETURNING *;`, [refId, userId])
+      VALUES($1, $2);`, [refId, userId])
     );
   }
 
