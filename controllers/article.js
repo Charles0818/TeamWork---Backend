@@ -64,7 +64,7 @@ exports.modifyArticle = (req, res) => {
 exports.getOneArticle = (req, res) => {
   const { id } = req.params;
   query(
-    `SELECT DISTINCT id, title, content, type, userID, createdOn
+    `SELECT DISTINCT id, title, content, type, category, userID, createdOn
     FROM feeds WHERE (id=$1 AND type='article');`, [id]
   )
     .then((content) => {
