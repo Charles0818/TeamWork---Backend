@@ -7,7 +7,7 @@ const cloudinary = require('../config/cloudinary');
 exports.getOneGif = (req, res) => {
   const { id } = req.params;
   query(
-    `SELECT DISTINCT id, title, content, type, userID, createdOn
+    `SELECT DISTINCT id, title, content, type, userID, category, createdOn
     FROM feeds WHERE (id=$1 AND type='gif');`, [id]
   )
     .then((content) => {
