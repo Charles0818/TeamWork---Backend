@@ -7,7 +7,7 @@ const cloudinary = require('../config/cloudinary');
 exports.getOneGif = (req, res) => {
   const { id } = req.params;
   query(
-    `SELECT DISTINCT id, title, content, type, createdOn
+    `SELECT DISTINCT id, title, content, type, userID, createdOn
     FROM feeds WHERE (id=$1 AND type='gif');`, [id]
   )
     .then((content) => {
@@ -49,7 +49,7 @@ exports.postGif = (req, res) => {
           status: 'success',
           data: {
             gifId: result.rows[0].id,
-            cloudId: result.rows[0].content[1],
+            publicId: result.rows[0].content[1],
             message: 'GIF image successfully posted',
             createdOn: result.rows[0].createdon,
             title: result.rows[0].title,
@@ -67,10 +67,9 @@ exports.postGif = (req, res) => {
 };
 
 exports.deleteGif = (req, res) => {
-  const gifId = req.params.id;
-  const { userId, cloudId } = req.body;
-  cloudinary.delete(cloudId)
-    .then(() => query("DELETE FROM feeds WHERE (id=$1 AND UserID=$2 AND type='gif')", [gifId, userId])
+  const { gifId, publicId, userId } = req.params;
+  cloudinary.delete(publicId)
+    .then(() => query("DELETE FROM feeds WHERE (id=$1 AND userID=$2 AND type='gif')", [gifId, userId])
       .then(() => res.status(200).json({ message: 'GIF was successfully deleted' })))
     .catch((err) => res.status(400).json({ error: err }));
 };
