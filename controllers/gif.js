@@ -48,12 +48,8 @@ exports.postGif = (req, res) => {
         .then((result) => res.status(201).json({
           status: 'success',
           data: {
-            gifId: result.rows[0].id,
-            publicId: result.rows[0].content[1],
             message: 'GIF image successfully posted',
-            createdOn: result.rows[0].createdon,
-            title: result.rows[0].title,
-            imageUrl: result.rows[0].content[0]
+            feed: result.rows[0],
           }
         }))
         .catch((err) => res.status(400).json({

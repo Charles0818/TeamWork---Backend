@@ -12,11 +12,7 @@ exports.postArticle = (req, res) => {
       status: 'success',
       data: {
         message: 'Article successfully posted',
-        articleId: result.rows[0].id,
-        title: result.rows[0].title,
-        category: result.rows[0].category,
-        createdOn: result.rows[0].createdOn,
-        contentType: result.rows[0].type
+        feed: result.rows[0],
       }
     }))
     .catch((err) => res.status(400).json({
