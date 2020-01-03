@@ -14,10 +14,7 @@ exports.postComment = (req, res) => {
       status: 'success',
       data: {
         message: 'Comment successfully posted',
-        contentId: result.rows[0].contentid,
-        commentId: result.rows[0].id,
-        comments: result.rows[0].comment,
-        createdOn: result.rows[0].createdOn
+        commentDetails: result.rows[0],
       }
     }))
     .catch((err) => res.status(400).json({
@@ -47,8 +44,7 @@ exports.modifyComment = (req, res) => {
       status: 'success',
       data: {
         message: 'Comment successfully updated',
-        comment: result.rows[0].comment,
-        commentId: result.rows[0].id,
+        commentDetails: result.rows[0],
       }
     }))
     .catch((error) => res.status(404).json({
