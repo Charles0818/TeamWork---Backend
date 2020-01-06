@@ -38,8 +38,8 @@ exports.deleteComment = (req, res) => {
 
 exports.modifyComment = (req, res) => {
   const { commentId, contentId } = req.params;
-  const { comment } = req.body;
-  query('UPDATE comments SET comment = $1 (WHERE id = $2 AND contentID =$3) RETURNING *', [comment, commentId, contentId])
+  const { comment, userId } = req.body;
+  query('UPDATE comments SET comment = $1 (WHERE id = $2 AND contentID =$3 AND userID =$4) RETURNING *', [comment, commentId, contentId, userId])
     .then((result) => res.status(201).json({
       status: 'success',
       data: {
